@@ -18,6 +18,10 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
+ * @property string $id_bagian
+ * @property string $id_kelompok
+ * @property string $id_cabang
+ * @property string $nama
  * @property string $auth_key
  * @property integer $status
  * @property integer $created_at

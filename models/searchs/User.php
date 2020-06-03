@@ -14,6 +14,10 @@ class User extends Model
     public $id;
     public $username;
     public $email;
+    public $id_bagian;
+    public $id_kelompok;
+    public $id_cabang;
+    public $nama;
     public $status;
     
     /**
