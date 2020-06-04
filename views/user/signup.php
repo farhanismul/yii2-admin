@@ -27,7 +27,7 @@ $cabang = ArrayHelper::map($modcabang, 'unit_id', 'name');
 <div class="site-signup">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to signup:</p>
+    <p>Silahkan Memasukan Data User Baru:</p>
     <?= Html::errorSummary($model)?>
     <div class="row">
         <div class="col-lg-5">
