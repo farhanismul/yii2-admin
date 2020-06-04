@@ -1,7 +1,7 @@
 {
     "name": "mellydecyber/yii2-admin",
     "description": "yii2-admin for pdam-app",
-    "type": "library",
+    "type": "yii2-extension",
     "license": "mellydecyber",
     "authors": [
         {
