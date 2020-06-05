@@ -27,7 +27,7 @@ class User extends Model
     {
         return [
             [['id', 'status',], 'integer'],
-            [['username', 'email'], 'safe'],
+            [['username', 'email', 'nama', 'id_cabang'], 'safe'],
         ];
     }
 
@@ -60,7 +60,9 @@ class User extends Model
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'email', $this->email]);
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'nama', $this->nama])
+            ->andFilterWhere(['like', 'id_cabang', $this->id_cabang, false]);
 
         return $dataProvider;
     }

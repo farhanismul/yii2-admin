@@ -40,6 +40,9 @@ class MenuController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
         $searchModel = new MenuSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 

@@ -76,6 +76,9 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -234,7 +237,8 @@ class UserController extends Controller
         if ($user->status == UserStatus::INACTIVE) {
             $user->status = UserStatus::ACTIVE;
             if ($user->save()) {
-                return $this->goHome();
+                // return $this->goHome();
+                return $this->redirect(array("/admin/user"));
             } else {
                 $errors = $user->firstErrors;
                 throw new UserException(reset($errors));

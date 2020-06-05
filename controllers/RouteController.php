@@ -35,6 +35,9 @@ class RouteController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
         $model = new Route();
         return $this->render('index', ['routes' => $model->getRoutes()]);
     }

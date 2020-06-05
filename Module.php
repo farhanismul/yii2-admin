@@ -103,7 +103,8 @@ class Module extends \yii\base\Module
         if ($this->navbar === null && Yii::$app instanceof \yii\web\Application) {
             $this->navbar = [
                 ['label' => Yii::t('rbac-admin', 'Help'), 'url' => ['default/index']],
-                ['label' => Yii::t('rbac-admin', 'Application'), 'url' => Yii::$app->homeUrl],
+                // ['label' => Yii::t('rbac-admin', 'Application'), 'url' => Yii::$app->homeUrl],
+                ['label' => Yii::t('rbac-admin', 'Logout'), 'url' => ['/site/logout'], 'options' => ['data-method'=>'post']],
             ];
         }
         if (class_exists('yii\jui\JuiAsset')) {

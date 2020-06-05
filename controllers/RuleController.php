@@ -41,6 +41,9 @@ class RuleController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
         $searchModel = new BizRuleSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 

@@ -21,7 +21,7 @@ $unit_kerja = ArrayHelper::map($modbagian, 'IDBAGIAN', 'NAMABAGIAN');
 $modkelompok = KelompokPetugas::find()->select(['id', new \yii\db\Expression("nama")])->all();
 $kelompok = ArrayHelper::map($modkelompok, 'id', 'nama');
 // Get Data Cabang
-$modcabang = OfficeOrUnit::find()->select(['unit_id', new \yii\db\Expression("name")])->all();
+$modcabang = OfficeOrUnit::find()->select(['unit_id', new \yii\db\Expression("name")])->where(['parent_id'=>0])->all();
 $cabang = ArrayHelper::map($modcabang, 'unit_id', 'name');
 ?>
 <div class="site-signup">

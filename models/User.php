@@ -9,6 +9,8 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use common\models\OfficeOrUnit;
+
 
 /**
  * User model
@@ -197,5 +199,11 @@ class User extends ActiveRecord implements IdentityInterface
     public static function getDb()
     {
         return Configs::userDb();
+    }
+
+    // CUSTOM RELASI
+    public function getCabang()
+    {
+        return $this->hasOne(OfficeOrUnit::className(), ['unit_id' => 'id_cabang']);
     }
 }

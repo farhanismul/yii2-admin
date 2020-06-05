@@ -59,6 +59,9 @@ class AssignmentController extends Controller
      */
     public function actionIndex()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
 
         if ($this->searchClass === null) {
             $searchModel = new AssignmentSearch;
