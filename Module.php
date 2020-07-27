@@ -105,6 +105,7 @@ class Module extends \yii\base\Module
             $this->navbar = [
                 ['label' => Yii::t('rbac-admin', 'Help'), 'url' => ['default/index']],
                 // ['label' => Yii::t('rbac-admin', 'Application'), 'url' => Yii::$app->homeUrl],
+                ['label' => Yii::t('rbac-admin', 'Ganti Password'), 'url' => ['/admin/user/change-password'], 'options' => ['data-method'=>'post']],
                 ['label' => Yii::t('rbac-admin', 'Logout'), 'url' => ['/site/logout'], 'options' => ['data-method'=>'post']],
             ];
         }

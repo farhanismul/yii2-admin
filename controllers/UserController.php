@@ -153,7 +153,7 @@ class UserController extends Controller
         $model = new Signup();
         if ($model->load(Yii::$app->getRequest()->post())) {
             if ($user = $model->signup()) {
-                return $this->goHome();
+                return $this->redirect(['user']);
             }
         }
 
@@ -215,7 +215,7 @@ class UserController extends Controller
     {
         $model = new ChangePassword();
         if ($model->load(Yii::$app->getRequest()->post()) && $model->change()) {
-            return $this->goHome();
+            return $this->redirect(['/admin']);
         }
 
         return $this->render('change-password', [

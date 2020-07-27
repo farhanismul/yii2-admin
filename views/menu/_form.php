@@ -5,15 +5,22 @@ use yii\widgets\ActiveForm;
 use mdm\admin\models\Menu;
 use yii\helpers\Json;
 use mdm\admin\AutocompleteAsset;
+use mdm\admin\models\searchs\Modul;
+use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
+
 
 /* @var $this yii\web\View */
 /* @var $model mdm\admin\models\Menu */
 /* @var $form yii\widgets\ActiveForm */
+
 AutocompleteAsset::register($this);
 $opts = Json::htmlEncode([
-        'menus' => Menu::getMenuSource(),
-        'routes' => Menu::getSavedRoutes(),
-    ]);
+    'menus' => Menu::getMenuSource(),
+    'routes' => Menu::getSavedRoutes(),
+]);
+$modul = ArrayHelper::map(Modul::find()->select(['id', 'name'])->asArray()->all(), 'id', 'name');
+$parent = ArrayHelper::map(Menu::find(['parent' => new \yii\db\Expression("null")])->select(['id', 'name'])->asArray()->all(), 'id', 'name');
 $this->registerJs("var _opts = $opts;");
 $this->registerJs($this->render('_script.js'));
 ?>
@@ -25,21 +32,41 @@ $this->registerJs($this->render('_script.js'));
         <div class="col-sm-6">
             <?= $form->field($model, 'name')->textInput(['maxlength' => 128]) ?>
 
-            <?= $form->field($model, 'parent_name')->textInput(['id' => 'parent_name']) ?>
+            <!-- <?= $form->field($model, 'parent_name')->textInput(['id' => 'parent_name']) ?> -->
+
+            <?= $form->field($model, 'parent')->widget(Select2::classname(), [
+                'data' => $parent,
+                'language' => 'en',
+                'options' => ['id' => 'id', 'placeholder' => 'Pilih Parent ...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]);
+            ?>
+           
 
             <?= $form->field($model, 'route')->textInput(['id' => 'route']) ?>
         </div>
         <div class="col-sm-6">
             <?= $form->field($model, 'order')->input('number') ?>
 
-            <?= $form->field($model, 'data')->textarea(['rows' => 4]) ?>
+            <?= $form->field($model, 'data')->textarea(['rows' => 2]) ?>
+            <?= $form->field($model, 'modul_id')->widget(Select2::classname(), [
+                'data' => $modul,
+                'language' => 'en',
+                'options' => ['id' => 'modul_id', 'placeholder' => 'Pilih Modul ...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]);
+            ?>
         </div>
     </div>
 
     <div class="form-group">
         <?=
-        Html::submitButton($model->isNewRecord ? Yii::t('rbac-admin', 'Create') : Yii::t('rbac-admin', 'Update'), ['class' => $model->isNewRecord
-                    ? 'btn btn-success' : 'btn btn-primary'])
+            Html::submitButton($model->isNewRecord ? Yii::t('rbac-admin', 'Create') : Yii::t('rbac-admin', 'Update'), ['class' => $model->isNewRecord
+                ? 'btn btn-success' : 'btn btn-primary'])
         ?>
     </div>
     <?php ActiveForm::end(); ?>

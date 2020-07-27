@@ -65,7 +65,6 @@ class Signup extends Model
             $user->username = $this->username;
             $user->email = $this->email;
             $user->id_bagian = $this->id_bagian;
-            $user->id_kelompok = $this->id_kelompok;
             $user->id_cabang = $this->id_cabang;
             $user->nama = $this->nama;
             $user->status = ArrayHelper::getValue(Yii::$app->params, 'user.defaultStatus', UserStatus::ACTIVE);

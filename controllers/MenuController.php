@@ -72,6 +72,7 @@ class MenuController extends Controller
     public function actionCreate()
     {
         $model = new Menu;
+       
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Helper::invalidate();
@@ -92,9 +93,9 @@ class MenuController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        if ($model->menuParent) {
-            $model->parent_name = $model->menuParent->name;
-        }
+        // if ($model->menuParent) {
+        //     $model->parent_name = $model->menuParent->name;
+        // }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Helper::invalidate();
             return $this->redirect(['view', 'id' => $model->id]);
