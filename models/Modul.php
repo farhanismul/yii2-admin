@@ -85,7 +85,7 @@ class Modul extends \yii\db\ActiveRecord
 
     public function getAuthModuls($id)
     {
-        return AuthModul::find(['user_id' => $id])->all();
+        return AuthModul::find()->where(['user_id' => $id])->all();
     }
 
     public function inputModulBulk($items, $id)
@@ -153,7 +153,7 @@ class Modul extends \yii\db\ActiveRecord
             ->execute() > 0;
     }
 
-    public function getItems()
+    public function getItems($id)
     {
         $available = [];
         foreach ($this->getModuls() as $name) {
@@ -162,11 +162,10 @@ class Modul extends \yii\db\ActiveRecord
 
 
         $assigned = [];
-        foreach ($this->getAuthModuls($this->id) as $item) {
+        foreach ($this->getAuthModuls($id) as $item) {
             $assigned[$item->modul_name] = $available[$item->modul_name];
             unset($available[$item->modul_name]);
         }
-
 
         return [
             'available' => $available,
