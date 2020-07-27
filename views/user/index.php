@@ -40,7 +40,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'id_cabang',
                 'value'=>function($model){
                         $modUnit = OfficeOrUnit::find()->where(['unit_id'=>$model->id_cabang])->one();
-                        return $modUnit->name;
+
+                        return (isset($modUnit->name) ? $modUnit->name : '');
                 },
                 'filter' => ArrayHelper::map(OfficeOrUnit::find()->asArray()->all(), 'unit_id', 'name'),
                 'filterType' => GridView::FILTER_SELECT2,
@@ -59,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Kelompok',
                 'value'=>function($model){
                     $modUnit = KelompokPetugas::find()->where(['id'=>$model->id_kelompok])->one();
-                    return $modUnit->nama;
+                    return (isset($modUnit->nama) ? $modUnit->nama : '');
                 }
             ],
             [
@@ -68,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Unit Kerja',
                 'value'=>function($model){
                     $modUnit = BagianModels::find()->where(['IDBAGIAN'=>$model->id_bagian])->one();
-                    return $modUnit->NAMABAGIAN;
+                    return (isset($modUnit->NAMABAGIAN) ? $modUnit->NAMABAGIAN : '');
                 }
             ],
             'username',

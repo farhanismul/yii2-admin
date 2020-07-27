@@ -4,10 +4,12 @@ namespace mdm\admin\controllers;
 
 use Yii;
 use mdm\admin\models\Assignment;
+use mdm\admin\models\Modul;
 use mdm\admin\models\searchs\Assignment as AssignmentSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
 
 /**
  * AssignmentController implements the CRUD actions for Assignment model.
@@ -98,6 +100,26 @@ class AssignmentController extends Controller
         ]);
     }
 
+
+    /**
+     * Displays a single Assignment model.
+     * @param  integer $id
+     * @return mixed
+     */
+    public function actionViewModul($id)
+    {
+        $model = $this->findModel($id);
+        $modul = Modul::findOne(['id' => $id]);
+
+        return $this->render('view-modul', [
+                'model' => $model,
+                'modul' => $modul,
+                'idField' => $this->idField,
+                'usernameField' => $this->usernameField,
+                'fullnameField' => $this->fullnameField,
+        ]);
+    }
+
     /**
      * Assign items
      * @param string $id
@@ -117,11 +139,41 @@ class AssignmentController extends Controller
      * @param string $id
      * @return array
      */
+    public function actionInsertModul($id)
+    {
+        $items = Yii::$app->getRequest()->post('items', []);
+        $model = new Modul();
+        
+        $success = $model->inputModulBulk($items, $id);
+        Yii::$app->getResponse()->format = 'json';
+        return array_merge($model->getItems(), ['success' => $success]);
+    }
+
+
+    /**
+     * Assign items
+     * @param string $id
+     * @return array
+     */
     public function actionRevoke($id)
     {
         $items = Yii::$app->getRequest()->post('items', []);
         $model = new Assignment($id);
         $success = $model->revoke($items);
+        Yii::$app->getResponse()->format = 'json';
+        return array_merge($model->getItems(), ['success' => $success]);
+    }
+
+    /**
+     * Assign items
+     * @param string $id
+     * @return array
+     */
+    public function actionRevokeModul($id)
+    {
+        $items = Yii::$app->getRequest()->post('items', []);
+        $model = new Modul();
+        $success = $model->revokeModulBulk($items, $id);
         Yii::$app->getResponse()->format = 'json';
         return array_merge($model->getItems(), ['success' => $success]);
     }

@@ -68,6 +68,7 @@ class Module extends \yii\base\Module
         'route' => 'Routes',
         'rule' => 'Rules',
         'menu' => 'Menus',
+        'modul' => 'Modul',
     ];
     /**
      * @var array
