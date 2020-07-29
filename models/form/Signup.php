@@ -17,6 +17,7 @@ class Signup extends Model
     public $id_bagian;
     public $id_kelompok;
     public $id_cabang;
+    public $id_bidang;
     public $nama;
     public $password;
     public $retypePassword;
@@ -41,6 +42,7 @@ class Signup extends Model
             [['id_bagian'], 'string', 'max' => 128],
             [['id_kelompok'], 'string', 'max' => 128],
             [['id_cabang'], 'string', 'max' => 128],
+            [['id_bidang'], 'string', 'max' => 128],
             [['nama'], 'string', 'max' => 128],
 
 

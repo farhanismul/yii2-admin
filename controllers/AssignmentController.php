@@ -101,15 +101,11 @@ class AssignmentController extends Controller
     }
 
 
-    /**
-     * Displays a single Assignment model.
-     * @param  integer $id
-     * @return mixed
-     */
     public function actionViewModul($id)
     {
         $model = $this->findModel($id);
         $modul = Modul::findOne(['id' => $id]);
+        if(!$modul) $modul = new Modul;
 
         return $this->render('view-modul', [
                 'model' => $model,
