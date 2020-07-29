@@ -61,18 +61,18 @@ class AssignmentController extends Controller
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+        // if (Yii::$app->user->isGuest) {
+        //     return $this->goHome();
+        // }
 
-        if ($this->searchClass === null) {
+        // if ($this->searchClass === null) {
             $searchModel = new AssignmentSearch;
-            $dataProvider = $searchModel->search(Yii::$app->getRequest()->getQueryParams(), $this->userClassName, $this->usernameField);
-        } else {
-            $class = $this->searchClass;
-            $searchModel = new $class;
-            $dataProvider = $searchModel->search(Yii::$app->getRequest()->getQueryParams());
-        }
+            // $dataProvider = $searchModel->search(Yii::$app->getRequest()->getQueryParams(), $this->userClassName, $this->usernameField);
+        // } else {
+            // $searchModel->username = '';
+            $dataProvider = $searchModel->searchNew(Yii::$app->request->queryParams);
+        // }
+        // var_dump($searchModel);
 
         return $this->render('index', [
                 'dataProvider' => $dataProvider,

@@ -35,12 +35,22 @@ class UserController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    // 'delete' => ['post'],
                     'logout' => ['post'],
                     'activate' => ['post'],
                 ],
             ],
         ];
+    }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     */
+    public function goUser()
+    {
+        return $this->redirect(['/admin/user']);
     }
 
     /**
@@ -77,14 +87,14 @@ class UserController extends Controller
     public function actionIndex()
     {
         if (Yii::$app->user->isGuest) {
-            return $this->goHome();
+            return $this->goUser();
         }
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -96,7 +106,7 @@ class UserController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-                'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -110,7 +120,7 @@ class UserController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->goUser();
     }
 
     /**
@@ -120,7 +130,7 @@ class UserController extends Controller
     public function actionLogin()
     {
         if (!Yii::$app->getUser()->isGuest) {
-            return $this->goHome();
+            return $this->goUser();
         }
 
         $model = new Login();
@@ -128,7 +138,7 @@ class UserController extends Controller
             return $this->goBack();
         } else {
             return $this->render('login', [
-                    'model' => $model,
+                'model' => $model,
             ]);
         }
     }
@@ -141,7 +151,7 @@ class UserController extends Controller
     {
         Yii::$app->getUser()->logout();
 
-        return $this->goHome();
+        return $this->goUser();
     }
 
     /**
@@ -153,12 +163,12 @@ class UserController extends Controller
         $model = new Signup();
         if ($model->load(Yii::$app->getRequest()->post())) {
             if ($user = $model->signup()) {
-                return $this->redirect(['user']);
+                return $this->redirect(['/admin/user']);
             }
         }
 
         return $this->render('signup', [
-                'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -173,15 +183,35 @@ class UserController extends Controller
             if ($model->sendEmail()) {
                 Yii::$app->getSession()->setFlash('success', 'Check your email for further instructions.');
 
-                return $this->goHome();
+                return $this->goUser();
             } else {
                 Yii::$app->getSession()->setFlash('error', 'Sorry, we are unable to reset password for email provided.');
             }
         }
 
         return $this->render('requestPasswordResetToken', [
-                'model' => $model,
+            'model' => $model,
         ]);
+    }
+
+    /**
+     * Request reset password
+     * @return string
+     */
+    public function actionResetPasswordNew($id)
+    {
+        $model = User::findOne(['id' => $id]);
+        $user = new User();
+        // var_dump($model); exit();
+        $model->username = $model->username;
+        $model->password_hash = $user->setPasswordNew($model->username);
+        if ($model->save(false)) {
+            Yii::$app->getSession()->setFlash('success', 'Berhasil Reset Password');
+            return $this->goUser();
+        } else {
+            Yii::$app->getSession()->setFlash('error', 'Gagal Reset Password');
+            return $this->goUser();
+        }
     }
 
     /**
@@ -199,11 +229,11 @@ class UserController extends Controller
         if ($model->load(Yii::$app->getRequest()->post()) && $model->validate() && $model->resetPassword()) {
             Yii::$app->getSession()->setFlash('success', 'New password was saved.');
 
-            return $this->goHome();
+            return $this->goUser();
         }
 
         return $this->render('resetPassword', [
-                'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -219,7 +249,7 @@ class UserController extends Controller
         }
 
         return $this->render('change-password', [
-                'model' => $model,
+            'model' => $model,
         ]);
     }
 
@@ -237,14 +267,14 @@ class UserController extends Controller
         if ($user->status == UserStatus::INACTIVE) {
             $user->status = UserStatus::ACTIVE;
             if ($user->save()) {
-                // return $this->goHome();
+                // return $this->goUser();
                 return $this->redirect(array("/admin/user"));
             } else {
                 $errors = $user->firstErrors;
                 throw new UserException(reset($errors));
             }
         }
-        return $this->goHome();
+        return $this->goUser();
     }
 
     /**

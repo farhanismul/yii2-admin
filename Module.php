@@ -66,7 +66,7 @@ class Module extends \yii\base\Module
         'role' => 'Roles',
         'permission' => 'Permissions',
         'route' => 'Routes',
-        'rule' => 'Rules',
+        // 'rule' => 'Rules',
         'menu' => 'Menus',
         'modul' => 'Modul',
     ];

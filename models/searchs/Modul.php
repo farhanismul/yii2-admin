@@ -51,14 +51,7 @@ class Modul extends ModulModel
           ]);
   
           $this->load($params);
-        //   if (!$this->validate()) {
-        //     //   $query->where('1=0');
-        //       return $dataProvider;
-        //   }
   
-          $query->andFilterWhere([
-              'name' => $this->name,
-          ]);
   
           $query->andFilterWhere(['like', 'name', $this->name]);
   

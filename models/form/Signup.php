@@ -18,6 +18,7 @@ class Signup extends Model
     public $id_kelompok;
     public $id_cabang;
     public $id_bidang;
+    public $is_admin;
     public $nama;
     public $password;
     public $retypePassword;
@@ -43,6 +44,7 @@ class Signup extends Model
             [['id_kelompok'], 'string', 'max' => 128],
             [['id_cabang'], 'string', 'max' => 128],
             [['id_bidang'], 'string', 'max' => 128],
+            [['is_admin'], 'string', 'max' => 128],
             [['nama'], 'string', 'max' => 128],
 
 
@@ -68,6 +70,8 @@ class Signup extends Model
             $user->email = $this->email;
             $user->id_bagian = $this->id_bagian;
             $user->id_cabang = $this->id_cabang;
+            $user->id_bidang = $this->id_bidang;
+            $user->is_admin = $this->is_admin;
             $user->nama = $this->nama;
             $user->status = ArrayHelper::getValue(Yii::$app->params, 'user.defaultStatus', UserStatus::ACTIVE);
             $user->setPassword($this->password);

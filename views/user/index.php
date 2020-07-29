@@ -11,6 +11,8 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 
 
+$identity = Yii::$app->user->identity;
+// var_dump($identity);
 
 /* @var $this yii\web\View */
 /* @var $searchModel mdm\admin\models\searchs\User */
@@ -29,91 +31,112 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?=
-    GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'nama',
-            [
-                'class'=>'\kartik\grid\DataColumn',
-                'attribute'=>'id_cabang',
-                'value'=>function($model){
-                        $modUnit = OfficeOrUnit::find()->where(['unit_id'=>$model->id_cabang])->one();
-
-                        return (isset($modUnit->name) ? $modUnit->name : '');
-                },
-                'filter' => ArrayHelper::map(OfficeOrUnit::find()->asArray()->all(), 'unit_id', 'name'),
-                'filterType' => GridView::FILTER_SELECT2,
-                'filterWidgetOptions' => [
-                    'options' => ['prompt' => 'Filter Unit Kerja..'],
-                    'pluginOptions' => [
-                        'allowClear' => true,
-                        'width'=>'100%'
-                    ],
-                ]
-              
-            ],
-            [
-                'class'=>'\kartik\grid\DataColumn',
-                'attribute'=>'id_kelompok',
-                'label'=>'Kelompok',
-                'value'=>function($model){
-                    $modUnit = KelompokPetugas::find()->where(['id'=>$model->id_kelompok])->one();
-                    return (isset($modUnit->nama) ? $modUnit->nama : '');
-                }
-            ],
-            [
-                'class'=>'\kartik\grid\DataColumn',
-                'attribute'=>'id_bagian',
-                'label'=>'Unit Kerja',
-                'value'=>function($model){
-                    $modUnit = BagianModels::find()->where(['IDBAGIAN'=>$model->id_bagian])->one();
-                    return (isset($modUnit->NAMABAGIAN) ? $modUnit->NAMABAGIAN : '');
-                }
-            ],
-            'username',
-            // 'email:email',
-            [
-                'attribute' => 'status',
-                'value' => function($model) {
-                    return $model->status == 0 ? 'Inactive' : 'Active';
-                },
-                'filter' => [
-                    0 => 'Inactive',
-                    10 => 'Active'
-                ]
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                // 'template' => Helper::filterActionColumn(['view', 'activates', 'delete']),
-                'template' => '{tombolAktiv}',
-                'urlCreator' => function ($action, $model, $key, $index) {
-                    if ($action === 'tombolAktiv') {
-                        return Url::toRoute(['user/activate', 'id' => $model['id']]);
-                    }
-                },
-                'buttons' => [
-                    'tombolAktiv' => function($url, $model) {
-                        if ($model->status == 10) {
-                            return '';
+        GridView::widget([
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                'username',
+                'nama',
+                [
+                    'class' => '\kartik\grid\DataColumn',
+                    'attribute' => 'id_cabang',
+                    'value' => function ($model) {
+                        if ($model->id_cabang != 1) {
+                            $modUnit = OfficeOrUnit::find()->where(['unit_id' => $model->id_cabang])->one();
+                        } else {
+                            $modUnit = OfficeOrUnit::find()->where(['unit_id' => $model->id_bagian])->one();
                         }
-                        $options = [
-                            'title' => Yii::t('rbac-admin', 'Activate'),
-                            'aria-label' => Yii::t('rbac-admin', 'Activate'),
-                            'data-confirm' => Yii::t('rbac-admin', 'Are you sure you want to activate this user?'),
-                            // 'data-method' => 'post',
-                            // 'data-pjax' => '0',
-                            'data' => [
-                                'confirm' => 'Anda yakin ingin mengaktivasi user ini?',
-                                'method' => 'post',
-                            ],
-                        ];
-                        return Html::a('<span class="glyphicon glyphicon-ok"></span>', $url, $options);
-                    }
+                        return (isset($modUnit->name) ? $modUnit->name : '');
+                    },
+                    'filter' => ArrayHelper::map(OfficeOrUnit::find()->asArray()->all(), 'unit_id', 'name'),
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filterWidgetOptions' => [
+                        'options' => ['prompt' => 'Filter Unit Kerja..'],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'width' => '100%'
+                        ],
+                    ],
+                    'label' => 'Unit Kerja'
+
+                ],
+                [
+                    'class' => '\kartik\grid\DataColumn',
+                    'attribute' => 'id_bidang',
+                    'value' => function ($model) {
+                        $modUnit = BagianModels::find()->where(['IDBAGIAN' => $model->id_bidang])->one();
+                        return (isset($modUnit->NAMABAGIAN) ? $modUnit->NAMABAGIAN : '');
+                    },
+                    'filter' => ArrayHelper::map(BagianModels::find()->asArray()->all(), 'IDBAGIAN', 'NAMABAGIAN'),
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filterWidgetOptions' => [
+                        'options' => ['prompt' => 'Filter Unit Kerja..'],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                            'width' => '100%'
+                        ],
+                    ],
+                    'label' => 'Bidang',
+
+                ],
+                [
+                    'attribute' => 'status',
+                    'value' => function ($model) {
+                        return $model->status == 0 ? 'Inactive' : 'Active';
+                    },
+                    'filter' => [
+                        0 => 'Inactive',
+                        10 => 'Active'
+                    ]
+                ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    // 'template' => Helper::filterActionColumn(['view', 'activates', 'delete']),
+                    'template' => '{tombolAktiv} {reset-password} {hapus}',
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        if ($action === 'tombolAktiv') {
+                            return Url::toRoute(['user/activate', 'id' => $model['id']]);
+                        }
+                    },
+                    'buttons' => [
+                        'tombolAktiv' => function ($url, $model) {
+                            if ($model->status == 10) {
+                                return '';
+                            }
+                            $options = [
+                                'title' => Yii::t('rbac-admin', 'Activate'),
+                                'aria-label' => Yii::t('rbac-admin', 'Activate'),
+                                'data-confirm' => Yii::t('rbac-admin', 'Are you sure you want to activate this user?'),
+                                'data' => [
+                                    'confirm' => 'Anda yakin ingin mengaktivasi user ini?',
+                                    'method' => 'post',
+                                ],
+                            ];
+                            return Html::a('<span class="glyphicon glyphicon-ok"></span>', $url, $options);
+                        },
+                        'reset-password' => function ($url, $model) {
+
+                            return Html::a('<span class="glyphicon glyphicon-arrow-right"></span>', ['reset-password-new', 'id' => $model->id], ['class' => 'btn btn-danger btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Reset Password']);
+                        },
+                        'hapus' => function ($url, $model) {
+                            $options = [
+                                'title' => Yii::t('rbac-admin', 'Hapus'),
+                                'aria-label' => Yii::t('rbac-admin', 'Hapus'),
+                                'data-confirm' => Yii::t('rbac-admin', 'Are you sure you want to Delete this user?'),
+                                'class' => 'btn btn-success btn-sm', 
+                                'data-toggle' => 'tooltip', 
+                                'data' => [
+                                    'confirm' => 'Anda yakin ingin Menghapus user ini?',
+                                    'method' => 'post',
+                                ],
+                            ];
+
+                            return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $model->id], $options);
+                        },
                     ]
                 ],
             ],
         ]);
-        ?>
+    ?>
 </div>

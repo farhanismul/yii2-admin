@@ -6,6 +6,9 @@ use appanggaran\models\BagianModels;
 use common\models\OfficeOrUnit;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
+use yii\web\View;
+
+
 
 
 /* @var $this yii\web\View */
@@ -23,6 +26,32 @@ $cabang = ArrayHelper::map($modcabang, 'unit_id', 'name');
 // Get Data Unit Kerja
 $modunit_kerja = OfficeOrUnit::find()->select(['unit_id', new \yii\db\Expression("name")])->where(['parent_id' => 1])->all();
 $unit_kerja = ArrayHelper::map($modunit_kerja, 'unit_id', 'name');
+$identity = Yii::$app->user->identity;
+
+if($identity->is_admin == '1'){
+$role = ['0' => 'Member', '1' => 'Admin Pusat', '2' => 'Admin Unit Kerja'];
+}else{
+$role = ['0' => 'Member', '2' => 'Admin Unit Kerja'];
+}
+$js = "
+$('#parent_id').change(function(){
+    let val = $(this).val();
+    if(val == '1'){
+        $('.field-bagian').show({
+        });
+    }else{
+        $('.field-bagian').hide({
+        });
+    }
+});
+$('#parent_id').trigger('change');
+";
+
+$this->registerJs(
+    $js,
+    View::POS_READY,
+    'my-button-handler'
+);
 ?>
 <div class="site-signup">
     <h1><?= Html::encode($this->title) ?></h1>
@@ -47,7 +76,7 @@ $unit_kerja = ArrayHelper::map($modunit_kerja, 'unit_id', 'name');
             <?= $form->field($model, 'id_bagian')->widget(Select2::classname(), [
                 'data' => $unit_kerja,
                 'language' => 'en',
-                'options' => ['id' => 'unit_id', 'placeholder' => 'Pilih Unit Kerja ...'],
+                'options' => ['id' => 'bagian', 'placeholder' => 'Pilih Unit Kerja ...'],
                 'pluginOptions' => [
                     'allowClear' => true
                 ],
@@ -62,7 +91,15 @@ $unit_kerja = ArrayHelper::map($modunit_kerja, 'unit_id', 'name');
                 ],
             ])->label('Bagian');
             ?>
-           
+            <?= $form->field($model, 'is_admin')->widget(Select2::classname(), [
+                'data' => $role,
+                'language' => 'en',
+                'options' => ['id' => 'is_admin', 'placeholder' => 'Pilih Role User ...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ])->label('Role');
+            ?>
             <?= $form->field($model, 'password')->passwordInput() ?>
             <?= $form->field($model, 'retypePassword')->passwordInput() ?>
             <div class="form-group">

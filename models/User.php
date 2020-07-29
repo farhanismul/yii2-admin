@@ -173,6 +173,16 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     */
+    public function setPasswordNew($password)
+    {
+        return Yii::$app->security->generatePasswordHash($password);
+    }
+
+    /**
      * Generates "remember me" authentication key
      */
     public function generateAuthKey()

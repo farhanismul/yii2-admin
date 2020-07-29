@@ -12,7 +12,6 @@ use yii\widgets\Pjax;
 
 $this->title = Yii::t('rbac-admin', 'Assignments');
 $this->params['breadcrumbs'][] = $this->title;
-
 $columns = [
     ['class' => 'yii\grid\SerialColumn'],
     $usernameField,
@@ -33,7 +32,6 @@ $columns[] = [
 ];
 ?>
 <div class="assignment-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
 
     <?php Pjax::begin(); ?>
