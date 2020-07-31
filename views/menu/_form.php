@@ -8,11 +8,19 @@ use mdm\admin\AutocompleteAsset;
 use mdm\admin\models\searchs\Modul;
 use yii\helpers\ArrayHelper;
 use kartik\select2\Select2;
+use mdm\admin\models\AuthItem;
+use mdm\admin\models\Route;
+use mdm\admin\models\Rute;
+use yii\web\JsExpression;
+use yii\helpers\Url;
 
 
 /* @var $this yii\web\View */
 /* @var $model mdm\admin\models\Menu */
 /* @var $form yii\widgets\ActiveForm */
+
+// $query = Rute::find()->all();
+// var_dump($query); exit();
 
 AutocompleteAsset::register($this);
 $opts = Json::htmlEncode([
@@ -43,9 +51,34 @@ $this->registerJs($this->render('_script.js'));
                 ],
             ]);
             ?>
-           
 
-            <?= $form->field($model, 'route')->textInput(['id' => 'route']) ?>
+            <?=
+                $form->field($model, 'route')->widget(Select2::classname(), [
+                    'id' => 'route',
+                    'language' => 'us',
+                    'options' => ['placeholder' => 'Pilih Rute ...'],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+                        'minimumInputLength' => 1,
+                        'language' => [
+                            'errorLoading' => new JsExpression("function () { return 'Gagal mendapatkan Hasil..'; }"),
+                        ],
+                        'ajax' => [
+                            'url' => Url::toRoute(['menu/get-rute']),
+                            'dataType' => 'json',
+                            'delay' => 250,
+                            'data' => new JsExpression('function(params) { return {q:params.term, page: params.page}; }'),
+                            'cache' => true
+                        ],
+                        'escapeMarkup' => new JsExpression('function (markup) { return markup; }'),
+                        'templateResult' => new JsExpression('function(route) { return route.text; }')
+                    ],
+                ])->label("Rute");
+            ?>
+
+
+
+            <!-- <?= $form->field($model, 'route')->textInput(['id' => 'route']) ?> -->
         </div>
         <div class="col-sm-6">
             <?= $form->field($model, 'order')->input('number') ?>

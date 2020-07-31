@@ -18,6 +18,8 @@ use yii\mail\BaseMailer;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use mdm\admin\components\Helper;
+
 
 /**
  * User controller
@@ -98,6 +100,16 @@ class UserController extends Controller
         ]);
     }
 
+     /**
+     * @inheritdoc
+     */
+    public function labels()
+    {
+        return[
+            'is_admin' => 'Role',
+        ];
+    }
+
     /**
      * Displays a single User model.
      * @param integer $id
@@ -105,8 +117,10 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $model->is_admin = $this->getRoleNama($model->is_admin);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model
         ]);
     }
 
@@ -161,6 +175,10 @@ class UserController extends Controller
     public function actionSignup()
     {
         $model = new Signup();
+        
+        $model->isNewRecord = true;
+        // var_dump($model); exit();
+
         if ($model->load(Yii::$app->getRequest()->post())) {
             if ($user = $model->signup()) {
                 return $this->redirect(['/admin/user']);
@@ -170,6 +188,44 @@ class UserController extends Controller
         return $this->render('signup', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * Updates an existing Menu model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param  integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = User::findOne($id);
+        // if ($model->menuParent) {
+        //     $model->parent_name = $model->menuParent->name;
+        // }
+        // 
+
+
+        if ($model->load(Yii::$app->getRequest()->post())) {
+            $data = Yii::$app->getRequest()->post('User');
+            $model->nama = $data['nama'];
+            $model->id_cabang = $data['id_cabang'];
+            $model->email = $data['email'];
+            $model->id_bagian = $data['id_bagian'];
+            $model->id_bidang = $data['id_bidang'];
+            $model->is_admin = $data['is_admin'];
+            $model->save(false);
+            Helper::invalidate();
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+    public static function getRoleNama($id)
+    {
+        $role = ['0' => 'Member', '1' => 'Admin Pusat', '2' => 'Admin Unit Kerja'];
+        return $role[$id];
     }
 
     /**

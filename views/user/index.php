@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 [
                     'class' => 'yii\grid\ActionColumn',
                     // 'template' => Helper::filterActionColumn(['view', 'activates', 'delete']),
-                    'template' => '{tombolAktiv} {reset-password} {hapus}',
+                    'template' => '{tombolAktiv} {reset-password} {hapus} {edit}',
                     'urlCreator' => function ($action, $model, $key, $index) {
                         if ($action === 'tombolAktiv') {
                             return Url::toRoute(['user/activate', 'id' => $model['id']]);
@@ -118,6 +118,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         'reset-password' => function ($url, $model) {
 
                             return Html::a('<span class="glyphicon glyphicon-arrow-right"></span>', ['reset-password-new', 'id' => $model->id], ['class' => 'btn btn-danger btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Reset Password']);
+                        },
+                        'edit' => function ($url, $model) {
+
+                            return Html::a('<span class="glyphicon glyphicon-edit"></span>', ['update', 'id' => $model->id], ['class' => 'btn btn-danger btn-sm', 'data-toggle' => 'tooltip', 'title' => 'Edit User']);
                         },
                         'hapus' => function ($url, $model) {
                             $options = [

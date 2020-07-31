@@ -19,6 +19,7 @@ class Signup extends Model
     public $id_cabang;
     public $id_bidang;
     public $is_admin;
+    public $isNewRecord;
     public $nama;
     public $password;
     public $retypePassword;

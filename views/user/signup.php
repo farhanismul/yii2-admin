@@ -9,8 +9,6 @@ use yii\helpers\ArrayHelper;
 use yii\web\View;
 
 
-
-
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
 /* @var $model \mdm\admin\models\form\Signup */
@@ -28,10 +26,10 @@ $modunit_kerja = OfficeOrUnit::find()->select(['unit_id', new \yii\db\Expression
 $unit_kerja = ArrayHelper::map($modunit_kerja, 'unit_id', 'name');
 $identity = Yii::$app->user->identity;
 
-if($identity->is_admin == '1'){
-$role = ['0' => 'Member', '1' => 'Admin Pusat', '2' => 'Admin Unit Kerja'];
-}else{
-$role = ['0' => 'Member', '2' => 'Admin Unit Kerja'];
+if ($identity->is_admin == '1') {
+    $role = ['0' => 'Member', '1' => 'Admin Pusat', '2' => 'Admin Unit Kerja'];
+} else {
+    $role = ['0' => 'Member', '2' => 'Admin Unit Kerja'];
 }
 $js = "
 $('#parent_id').change(function(){
@@ -54,15 +52,18 @@ $this->registerJs(
 );
 ?>
 <div class="site-signup">
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>Silahkan Memasukan Data User Baru:</p>
+    <?php if ($model->isNewRecord) { ?>
+        <h1><?= Html::encode($this->title) ?></h1>
+        <p>Silahkan Memasukan Data User Baru:</p>
+    <?php } ?>
     <?= Html::errorSummary($model) ?>
     <div class="row">
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['id' => 'form-signup']); ?>
             <?= $form->field($model, 'nama') ?>
-            <?= $form->field($model, 'username') ?>
+            <?php if ($model->isNewRecord) { ?>
+                <?= $form->field($model, 'username') ?>
+            <?php } ?>
             <?= $form->field($model, 'email') ?>
             <?= $form->field($model, 'id_cabang')->widget(Select2::classname(), [
                 'data' => $cabang,
@@ -100,11 +101,21 @@ $this->registerJs(
                 ],
             ])->label('Role');
             ?>
-            <?= $form->field($model, 'password')->passwordInput() ?>
-            <?= $form->field($model, 'retypePassword')->passwordInput() ?>
+            <?php if ($model->isNewRecord) { ?>
+                <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'retypePassword')->passwordInput() ?>
+            <?php } ?>
+
             <div class="form-group">
-                <?= Html::submitButton(Yii::t('rbac-admin', 'Signup'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>
+                <!-- <?= Html::submitButton(Yii::t('rbac-admin', 'Signup'), ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?> -->
+            <?php
+            echo Html::submitButton($model->isNewRecord ? Yii::t('rbac-admin', 'Signup') : Yii::t('rbac-admin', 'Update'), [
+                'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary',
+                'name' => 'signup-button'
+            ])
+            ?>
             </div>
+
             <?php ActiveForm::end(); ?>
         </div>
     </div>

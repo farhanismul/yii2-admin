@@ -78,6 +78,11 @@ class Configs extends \mdm\admin\BaseObject
     /**
      * @var string Menu table name.
      */
+    public $ruteTable = '{{%auth_item}}';
+
+    /**
+     * @var string Menu table name.
+     */
     public $modulTable = '{{%modul}}';
 
     /**

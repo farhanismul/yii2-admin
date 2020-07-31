@@ -171,7 +171,7 @@ class AssignmentController extends Controller
         $model = new Modul();
         $success = $model->revokeModulBulk($items, $id);
         Yii::$app->getResponse()->format = 'json';
-        return array_merge($model->getItems(), ['success' => $success]);
+        return array_merge($model->getItems($id), ['success' => $success]);
     }
 
     /**

@@ -9,6 +9,11 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use mdm\admin\components\Helper;
+use mdm\admin\components\Configs;
+use mdm\admin\models\AuthItem as ModelsAuthItem;
+use mdm\admin\models\Rute;
+
+// use mdm\admin\models\searchs\AuthItem;
 
 /**
  * MenuController implements the CRUD actions for Menu model.
@@ -28,7 +33,7 @@ class MenuController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['post'],
+                    // 'delete' => ['post'],
                 ],
             ],
         ];
@@ -47,8 +52,8 @@ class MenuController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
         return $this->render('index', [
-                'dataProvider' => $dataProvider,
-                'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 
@@ -60,7 +65,7 @@ class MenuController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-                'model' => $this->findModel($id),
+            'model' => $this->findModel($id),
         ]);
     }
 
@@ -72,14 +77,14 @@ class MenuController extends Controller
     public function actionCreate()
     {
         $model = new Menu;
-       
+
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Helper::invalidate();
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
-                    'model' => $model,
+                'model' => $model,
             ]);
         }
     }
@@ -101,25 +106,45 @@ class MenuController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
-                    'model' => $model,
+                'model' => $model,
             ]);
         }
     }
 
     /**
      * Deletes an existing Menu model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * If deletion is successful, the browser will be redirected to the 'menu' page.
      * @param  integer $id
      * @return mixed
      */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-        Helper::invalidate();
+        Helper::invalidate(); 
 
-        return $this->redirect(['index']);
+        return $this->redirect('menu');
     }
 
+    /**
+     * Get saved routes.
+     * @return array
+     */
+    private static $name;
+    public static function actionGetRute($q = null, $id = null)
+    {
+
+        $out = ['results' => ['id' => '', 'text' => '']];
+        if (!is_null($q)) {
+            $query = "SELECT name as id, name as text FROM " . Yii::$app->params['dbadmin'].".dbo.".Rute::tableName() . " WHERE (name LIKE '/%' AND name LIKE '{$q}%')";
+            $data = Yii::$app->db->createCommand($query)->queryAll();
+            $out['results'] = array_values($data);
+        } elseif ($id > 0) {
+            $out['results'] = ['id' => '', 'text' => Rute::find()->where(['name' => $id])->one()['name']];
+        }
+        return json_encode($out);
+       
+    }
+   
     /**
      * Finds the Menu model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

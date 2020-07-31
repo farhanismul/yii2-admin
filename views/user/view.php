@@ -31,7 +31,7 @@ $controllerId = $this->context->uniqueId . '/';
         ?>
         <?php
         // var_dump(Helper::checkRoute('/'.$controllerId . 'delete'));
-        if (Helper::checkRoute('/' . $controllerId . 'delete')) {
+        // if (Helper::checkRoute($controllerId . 'delete')) {
             echo Html::a(Yii::t('rbac-admin', 'Delete'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
@@ -39,7 +39,7 @@ $controllerId = $this->context->uniqueId . '/';
                     'method' => 'post',
                 ],
             ]);
-        }
+        // }
         ?>
     </p>
 
@@ -48,6 +48,8 @@ $controllerId = $this->context->uniqueId . '/';
             'model' => $model,
             'attributes' => [
                 'username',
+                'nama',
+                'is_admin',
                 'email:email',
                 'created_at:date',
                 'status',
