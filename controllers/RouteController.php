@@ -2,6 +2,7 @@
 
 namespace mdm\admin\controllers;
 
+use yii\filters\AccessControl;
 use Yii;
 use mdm\admin\models\Route;
 use yii\web\Controller;
@@ -18,6 +19,15 @@ class RouteController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

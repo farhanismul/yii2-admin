@@ -2,6 +2,7 @@
 
 namespace mdm\admin\controllers;
 
+use yii\filters\AccessControl;
 use mdm\admin\components\UserStatus;
 use mdm\admin\models\form\ChangePassword;
 use mdm\admin\models\form\Login;
@@ -34,6 +35,15 @@ class UserController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

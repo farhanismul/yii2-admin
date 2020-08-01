@@ -2,6 +2,7 @@
 
 namespace mdm\admin\controllers;
 
+use yii\filters\AccessControl;
 use Yii;
 use mdm\admin\models\BizRule;
 use yii\web\Controller;
@@ -26,6 +27,15 @@ class RuleController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

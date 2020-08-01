@@ -2,6 +2,7 @@
 
 namespace mdm\admin\controllers;
 
+use yii\filters\AccessControl;
 use Yii;
 use mdm\admin\models\Assignment;
 use mdm\admin\models\Modul;
@@ -26,6 +27,32 @@ class AssignmentController extends Controller
     public $searchClass;
     public $extraColumns = [];
 
+     /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'assign' => ['post'],
+                    'assign' => ['post'],
+                    'revoke' => ['post'],
+                ],
+            ],
+        ];
+    }
+    
     /**
      * @inheritdoc
      */
@@ -38,22 +65,6 @@ class AssignmentController extends Controller
         }
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'assign' => ['post'],
-                    'assign' => ['post'],
-                    'revoke' => ['post'],
-                ],
-            ],
-        ];
-    }
 
     /**
      * Lists all Assignment models.
